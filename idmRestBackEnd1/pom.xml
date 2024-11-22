@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>idmRestBackEnd</groupId>
+    <artifactId>idmRestBackEnd</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <groupId>idmRestBackEnd</groupId>
+  <artifactId>idmRestBackEnd1</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>idmRestBackEnd1</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+<groupId>mgJdbi</groupId>
+  <artifactId>mgJdbi</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  </dependency>
+    
+  </dependencies>
+  <build>
+    <finalName>idmRestBackEnd</finalName>
+      <plugins>
+            <plugin>
+             <groupId>org.apache.maven.plugins</groupId>
+   <artifactId>maven-antrun-plugin</artifactId>
+   <version>1.8</version>
+   <executions>
+      <execution>
+         <id>scp-to-remote</id>
+         <phase>package</phase>
+         <goals>
+            <goal>run</goal>
+         </goals>
+         <configuration>
+            <target>
+               <!-- keyfile+passphrase or  password, choose one -->
+               <!--
+                                <scp localFile="${project.basedir}/target/qos-spark-1.0.jar"
+                                  remoteToFile="root@ip_addr:/usr/sanss" verbose="true"
+                                  keyfile="C:\Users\shengw\.ssh\ip_addr\id_rsa"
+                                  passphrase="">
+                                </scp>
+                                 -->
+               <scp localFile="${project.basedir}/target/${project.build.finalName}.jar" 
+               remoteToFile="admin@192.168.243.143:/home/admin/${project.build.finalName}.jar"
+               verbose="true" 
+               password="zubur1"
+               trust="true" />
+               <!-- calls deploy script -->
+               <!--
+               <sshexec host="192.168.243.143" 
+               trust="yes" 
+               username="root" 
+               password="zubur1" 
+               command="sudo systemctl restart ${project.name}" />
+               -->
+               <!-- SSH -->
+               <taskdef name="sshexec" 
+               classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec" 
+               classpathref="maven.plugin.classpath" />
+            </target>
+         </configuration>
+      </execution>
+   </executions>
+   <!-- libraries for scp impl      -->
+   <!-- antrun doesn't use os's scp -->
+   <dependencies>
+      <dependency>
+         <groupId>com.jcraft</groupId>
+         <artifactId>jsch</artifactId>
+         <version>0.1.53</version>
+      </dependency>
+      <dependency>
+         <groupId>ant</groupId>
+         <artifactId>ant-jsch</artifactId>
+         <version>1.6.5</version>
+      </dependency>
+   </dependencies>
+             </plugin>
+        </plugins>
+    
+      </build>
+</project>
