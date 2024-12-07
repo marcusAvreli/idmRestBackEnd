@@ -1,6 +1,7 @@
 package idmRestBackEnd.database.dao.idm;
 
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -47,6 +48,14 @@ public class IdmRprtUserViewDAO implements DbRprtUserViewDAO{
 				
 		logger.info("get_all_data_source_finish");
 		
+		return resultReport;
+	}
+	@Override
+	public Report getById(String uvId) {
+		String sql = "select * from "+tableName + " where id=:id";
+		Map<String,Object> inParams = new HashMap<String,Object>();
+		inParams.put("id", uvId);
+		Report resultReport = DbUtil.mgExecuteSelect(connection,sql,inParams);
 		return resultReport;
 	}
 }

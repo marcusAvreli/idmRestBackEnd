@@ -32,6 +32,8 @@ import idmRestBackEnd.database.dao.DataSourceDAO;
 import idmRestBackEnd.database.dao.DataSourceDAOFactory;
 import idmRestBackEnd.database.dao.DbFunctionFieldDAO;
 import idmRestBackEnd.database.dao.DbFunctionFieldDAOFactory;
+import idmRestBackEnd.database.dao.DbObjectDAO;
+import idmRestBackEnd.database.dao.DbObjectDAOFactory;
 import idmRestBackEnd.database.dao.idm.IdmDataSourceDAO;
 import idmRestBackEnd.entity.DataSource;
 import idmRestBackEnd.entity.Report;
@@ -57,7 +59,7 @@ public class DataSourceEP {
 		
 		if(success) {
 			logger.info("token_valid");
-			DataSourceDAO dataSourceDAO = DataSourceDAOFactory.getDataSourceDAO();
+			DataSourceDAO dataSourceDAO = DataSourceDAOFactory.getDAO();
 			
 		  StringBuilder crunchifyBuilder = new StringBuilder();
 	        try {
@@ -92,7 +94,7 @@ public class DataSourceEP {
 		boolean success = (Boolean) validationResult.get("success");
 		if(success) {
 			logger.info("token_validated:"+success);		
-			DataSourceDAO dataSourceDAO = DataSourceDAOFactory.getDataSourceDAO();
+			DataSourceDAO dataSourceDAO = DataSourceDAOFactory.getDAO();
 			Report finalReport = dataSourceDAO.getAll();
 			
 			return Response.status(200).type(MediaType.APPLICATION_JSON).entity(finalReport).build();
@@ -112,7 +114,7 @@ public class DataSourceEP {
 		boolean success = (Boolean) validationResult.get("success");
 		if(success) {
 		
-			DataSourceDAO dataSourceDAO = DataSourceDAOFactory.getDataSourceDAO();
+			DataSourceDAO dataSourceDAO = DataSourceDAOFactory.getDAO();
 			Report finalReport = dataSourceDAO.findById(inFunctionName);
 			List<Map<String,Object>> data = finalReport.getData();
 			if(null != data) {
@@ -122,6 +124,54 @@ public class DataSourceEP {
 				return Response.status(200).type(MediaType.APPLICATION_JSON).entity(null).build();
 			}
 		}
+		return Response.status(200).type(MediaType.APPLICATION_JSON).entity(null).build();
+	}
+	
+	@POST
+	@Path("delete")
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_JSON})	
+	public Response delete( InputStream stream) throws IOException {
+		logger.info("delete_data_source_start");
+		ValidateToken vt = new ValidateToken();		
+		Map<String, Object> result = vt.validateToken(httpRequest);
+		
+		
+		boolean success = (Boolean) result.get("success");
+		
+		if(success) {
+			logger.info("token_valid");
+			DataSourceDAO dataSourceDAO = DataSourceDAOFactory.getDAO();
+			
+		  StringBuilder crunchifyBuilder = new StringBuilder();
+	        try {
+	            BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+	            String line = null;
+	            while ((line = in.readLine()) != null) {
+	                crunchifyBuilder.append(line);
+	            }
+	        } catch (Exception e) {
+	        	logger.error("Error Parsing: - ");
+	        }
+	        
+	        String inString = crunchifyBuilder.toString();
+	        logger.info("Data Received: " + inString);
+	     //   DbFunctionField bean = new ObjectMapper().readValue(inString, DbFunctionField.class);
+	        
+	        ObjectMapper mapper = new ObjectMapper(); 
+	       
+	        TypeReference<HashMap<String,Object>> typeRef 
+	                = new TypeReference<HashMap<String,Object>>() {};
+
+	      
+	        DataSource bean = new ObjectMapper().readValue(inString, DataSource.class);
+	        
+	        dataSourceDAO.delete(bean);
+	        
+		}else {
+			logger.info("token_is_not_valid");
+		}
+		logger.info("delete_data_source_finish");
 		return Response.status(200).type(MediaType.APPLICATION_JSON).entity(null).build();
 	}
 }

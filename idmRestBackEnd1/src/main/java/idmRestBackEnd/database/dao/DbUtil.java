@@ -107,7 +107,12 @@ public class DbUtil {
 					ColumnDefinition cd = new ColumnDefinition();
 					cd.setField(columnName);
 					cd.setTitle(columnName);
-			 		if(fieldType.equals("BIT") && columnSize == 1) {
+					/*
+					logger.info("columnName:"+columnName);
+					logger.info("fieldType:"+fieldType);
+					logger.info("columnSize:"+columnSize);
+					*/
+			 		if(fieldType.equals("INT") && columnSize == 1) {
 			 			cd.setFormatter("wj-cell-checkbox");
 			 		}
 					

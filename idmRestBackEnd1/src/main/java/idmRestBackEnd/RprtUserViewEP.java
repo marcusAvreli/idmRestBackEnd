@@ -11,6 +11,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -23,6 +24,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import idmRestBackEnd.database.dao.DbFunctionFieldDAO;
 import idmRestBackEnd.database.dao.DbFunctionFieldDAOFactory;
+import idmRestBackEnd.database.dao.DbRprtColumnDAO;
+import idmRestBackEnd.database.dao.DbRprtColumnDAOFactory;
 import idmRestBackEnd.database.dao.DbRprtUserViewDAO;
 import idmRestBackEnd.database.dao.DbRprtUserViewDAOFactory;
 import idmRestBackEnd.entity.Report;
@@ -91,6 +94,26 @@ public class RprtUserViewEP {
 			return Response.status(200).type(MediaType.APPLICATION_JSON).entity(finalReport).build();
 		}
 		logger.info("get_report_list_finish_empty");
+		return Response.status(200).type(MediaType.APPLICATION_JSON).entity(null).build();
+	}
+	
+	@GET
+	@Path("/{reportId}")
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Produces({MediaType.APPLICATION_JSON})
+	public Response getUVbyId(@PathParam("reportId") String inDataSourceName) throws IOException {
+		logger.info("get_uv_by_id_start");
+		ValidateToken vt = new ValidateToken();		
+		Map<String, Object> validationResult = vt.validateToken(httpRequest);		
+		boolean success = (Boolean) validationResult.get("success");
+		if(success) {
+		
+			DbRprtUserViewDAO dataSourceDAO = DbRprtUserViewDAOFactory.getDAO();
+			Report finalReport = dataSourceDAO.getById(inDataSourceName);
+			logger.info("get_uv_by_id_finish");
+			return Response.status(200).type(MediaType.APPLICATION_JSON).entity(finalReport).build();
+		}
+		logger.info("get_uv_by_id_finish_1");
 		return Response.status(200).type(MediaType.APPLICATION_JSON).entity(null).build();
 	}
 }

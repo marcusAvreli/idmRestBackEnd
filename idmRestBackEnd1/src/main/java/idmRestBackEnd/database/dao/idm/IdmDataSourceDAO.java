@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import idmRestBackEnd.database.dao.DataSourceDAO;
 import idmRestBackEnd.database.dao.DbUtil;
+import idmRestBackEnd.database.dao.MapperUtil;
 import idmRestBackEnd.entity.ColumnDefinition;
 import idmRestBackEnd.entity.DataSource;
 import idmRestBackEnd.entity.Report;
@@ -55,9 +56,9 @@ public class IdmDataSourceDAO implements DataSourceDAO{
 			Report report = DbUtil.mgExecuteSelect(connection, sql, map);
 			
 			if(Report.isEmpty(report)) {				
-				sql = "insert into " +tableName +" (id,name,display_name,description,disabled) values (:id,:name,:displayName,:description,:disabled)";
+				sql = "insert into " +tableName +" (id,name,display_name,description,disabled) values (:id,:name,:display_name,:description,:disabled)";
 			}else {
-				sql = "update " +tableName +" set display_name=:displayName,description=:description,disabled=:disabled where name=:name";				
+				sql = "update " +tableName +" set display_name=:display_name,description=:description,disabled=:disabled where name=:name";				
 			}
 			success = DbUtil.mgExecuteUpdate(connection,sql,map);
 		    logger.info("create_report_finish");
@@ -185,6 +186,19 @@ public class IdmDataSourceDAO implements DataSourceDAO{
 		inParams.put("functionName", inFunctionName);
 		Report resultReport = DbUtil.mgExecuteSelect(connection,sql,inParams);
 		return resultReport;
+	}
+	@Override
+	public boolean delete(DataSource inDataSource) {
+		logger.info("data_source_delete");
+		Map<String,Object> inMap = MapperUtil.convertToMap(inDataSource);
+		String sql = "delete from "+ tableName +" where id=:id";
+		Map<String,Object> inputParams = new HashMap<String,Object>();
+		String id = (String) inMap.get("id");
+		logger.info("id:"+id);
+		inputParams.put("id", id);
+		boolean success = DbUtil.mgExecuteUpdate(connection,sql,inputParams);
+		
+		return success;
 	}
 
 }

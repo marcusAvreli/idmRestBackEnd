@@ -13,7 +13,7 @@ import idmRestBackEnd.database.dao.idm.IdmDataSourceDAO;
 public class DataSourceDAOFactory {
 	private static final Logger logger = LoggerFactory.getLogger(DataSourceDAOFactory.class);
 	
-	public static DataSourceDAO getDataSourceDAO() {
+	public static DataSourceDAO getDAO() {
 		// get connection
 Connection		connection = (Connection) ConnectionFactory.getConnection();
 		logger.info("connection:"+connection);
