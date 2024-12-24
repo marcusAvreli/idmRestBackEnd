@@ -115,6 +115,11 @@ public class DbUtil {
 			 		if(fieldType.equals("INT") && columnSize == 1) {
 			 			cd.setFormatter("wj-cell-checkbox");
 			 		}
+			 		logger.info("column_name:"+columnName);
+			 		if(columnName.toUpperCase().endsWith("_DATE")) {
+			 			logger.info("setting_date");
+			 			cd.setFormatter("wj-date");
+			 		}
 					
 				 
 					resultReport.addColumn(cd);

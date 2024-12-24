@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import idmRestBackEnd.database.dao.DbRprtMetaDAO;
 import idmRestBackEnd.database.dao.DbUtil;
 import idmRestBackEnd.entity.ColumnDefinition;
+import idmRestBackEnd.entity.FormatterParam;
+import idmRestBackEnd.entity.HeaderFilterFuncParams;
 import idmRestBackEnd.entity.Report;
 import idmRestBackEnd.entity.RprtMeta;
 
@@ -69,6 +71,26 @@ public class IdmRprtMetaDAO implements DbRprtMetaDAO {
 					 cd.setTitle(display_iw);
 				 }else {
 					 cd.setTitle(name);
+				 }
+				 logger.info("meta_name:"+name);
+				 if(name.toUpperCase().endsWith("_DATE")) {
+					 logger.info("setting_date");
+					 cd.setFormatter("wj-date");
+					 cd.setHeaderFilter("myEditor");
+					 
+					/*cd.setFilterable(true);
+					 cd.setFilterField(name);
+					 cd.setSortField(name);
+					 cd.setSorter("date");
+					 */
+					 FormatterParam fps = new FormatterParam();
+					 fps.setTemplate("yyyy-mm-dd");
+					 /*HeaderFilterFuncParams headerFilterFuncParams = new HeaderFilterFuncParams(); 
+					 headerFilterFuncParams.setType("date-range");
+					 cd.setHeaderFilterFuncParams(headerFilterFuncParams);
+					*/
+					 cd.setFormatterParams(fps);
+					 
 				 }
 				 int ordering = (int) mapColumn.get("ordering");
 				 cd.setOrdering(ordering);
