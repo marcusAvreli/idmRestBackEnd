@@ -104,18 +104,18 @@ public class DataSourceEP {
 	}
 	
 	@GET
-	@Path("/{functionName}")
+	@Path("/{id}")
 	@Consumes({MediaType.APPLICATION_JSON})
 	@Produces({MediaType.APPLICATION_JSON})
-	public Response findById(@PathParam("functionName") String inFunctionName) throws IOException {
-		logger.info("fieldsByFunction_start");
+	public Response findById(@PathParam("id") String inId) throws IOException {
+		logger.info("data_source_by_id");
 		ValidateToken vt = new ValidateToken();		
 		Map<String, Object> validationResult = vt.validateToken(httpRequest);		
 		boolean success = (Boolean) validationResult.get("success");
 		if(success) {
 		
 			DataSourceDAO dataSourceDAO = DataSourceDAOFactory.getDAO();
-			Report finalReport = dataSourceDAO.findById(inFunctionName);
+			Report finalReport = dataSourceDAO.findById(inId);
 			List<Map<String,Object>> data = finalReport.getData();
 			if(null != data) {
 				Map<String,Object> resultData = data.get(0);

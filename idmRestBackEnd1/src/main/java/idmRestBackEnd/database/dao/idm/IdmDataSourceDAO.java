@@ -180,10 +180,12 @@ public class IdmDataSourceDAO implements DataSourceDAO{
 	    return success;
 	}
 	@Override
-	public Report findById(String inFunctionName) {
-		String sql = "select * from "+ tableName +" where name=:functionName";
+	public Report findById(String inId) {
+		// part of input parameters based on entity
+		//entity must be the same on rest and on client
+		String sql = "select * from "+ tableName +" where id=:id";
 		Map<String,Object> inParams = new HashMap<String,Object>();
-		inParams.put("functionName", inFunctionName);
+		inParams.put("id", inId);
 		Report resultReport = DbUtil.mgExecuteSelect(connection,sql,inParams);
 		return resultReport;
 	}
