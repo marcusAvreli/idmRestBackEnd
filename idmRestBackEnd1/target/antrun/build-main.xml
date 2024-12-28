@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<project name="maven-antrun-" default="main"  >
-<target name="main">
-  <scp trust="true" password="zubur1" localFile="C:\Users\User\eclipse-workspace\idmRestBackEnd\idmRestBackEnd1/target/idmRestBackEnd.jar" remoteToFile="admin@192.168.243.143:/home/admin/idmRestBackEnd.jar" verbose="true"/>
-  <taskdef classname="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec" name="sshexec" classpathref="maven.plugin.classpath"/>
-</target>
-</project>
